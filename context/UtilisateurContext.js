@@ -13,6 +13,7 @@ import { createContext, useContext } from 'react';
 export const UtilisateurContext = createContext({
   utilisateur: null,
   deconnecter: () => {},
+  mettreAJourUtilisateur: () => {},
 });
 
 // Hook personnalisé : un raccourci pour lire le contexte.

@@ -21,7 +21,7 @@ export default StyleSheet.create({
   boutonAjout: { alignSelf: 'flex-start', marginTop: 12, paddingVertical: 10 }, // 4.3
 
   // --- Liste ----------------------------------------------------------
-  liste: { paddingHorizontal: 16, paddingBottom: 24 },
+  liste: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 24 },
   entete: { paddingVertical: 16 },
   titre: { fontSize: 24, fontWeight: '700', color: '#1B4332' },
   sousTitre: { fontSize: 14, color: '#6B9080', marginTop: 4 },
@@ -33,14 +33,15 @@ export default StyleSheet.create({
   carte: {
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 14,
+    padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderLeftWidth: 4,          // [TOUCHE PERSO] liseré vert à gauche
     borderLeftColor: '#95D5B2',  // [TOUCHE PERSO]
   },
-  carteGauche: { flex: 1, paddingRight: 12 }, // flex: 1 -> les noms longs passent à la ligne
+  imageJeu: { width: 92, height: 58, borderRadius: 8, backgroundColor: '#E5E7EB', marginRight: 10 },
+  carteGauche: { flex: 1, paddingRight: 8 }, // flex: 1 -> les noms longs passent à la ligne
   nom: { fontSize: 16, fontWeight: '600' },
   categorie: { fontSize: 13, color: '#6B7280', marginTop: 2 },
   prix: { fontSize: 17, fontWeight: '700', color: '#40916C' },
@@ -59,9 +60,18 @@ export default StyleSheet.create({
     fontSize: 16,
     marginTop: 12,
   },
-  listePuces: { flexGrow: 0 }, // la liste horizontale ne prend pas toute la hauteur
-  puces: { paddingHorizontal: 16, paddingVertical: 12 },
+  listePuces: {
+    flexGrow: 0, // la liste horizontale ne prend pas toute la hauteur
+    marginBottom: 8,
+  },
+  puces: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
   puce: {
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#D8F3DC',

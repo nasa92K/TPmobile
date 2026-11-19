@@ -49,3 +49,33 @@ export const verifierConnexion = async (email, mdp) => {
     mdp
   );
 };
+
+// Modifie l'adresse e-mail après avoir vérifié qu'elle n'est pas déjà utilisée.
+export const modifierEmail = async (id, email) => {
+  const db = await getDb();
+  const existant = await db.getFirstAsync(
+    'SELECT id FROM utilisateurs WHERE email = ? AND id != ?',
+    email.trim().toLowerCase(),
+    id
+  );
+  if (existant) return { ok: false, message: 'Cette adresse est déjà utilisée.' };
+
+  await db.runAsync(
+    'UPDATE utilisateurs SET email = ? WHERE id = ?',
+    email.trim().toLowerCase(),
+    id
+  );
+  return { ok: true };
+};
+
+// Ne change le mot de passe que si l'ancien correspond bien au compte.
+export const changerMotDePasse = async (id, ancien, nouveau) => {
+  const db = await getDb();
+  const resultat = await db.runAsync(
+    'UPDATE utilisateurs SET mdp = ? WHERE id = ? AND mdp = ?',
+    nouveau,
+    id,
+    ancien
+  );
+  return resultat.changes > 0;
+};

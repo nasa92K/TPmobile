@@ -28,13 +28,17 @@ export default function App() {
   // [AJOUT HOOK] useCallback : garde la MÊME fonction entre deux affichages
   // (sinon une nouvelle fonction serait créée à chaque fois).
   const deconnecter = useCallback(() => setUtilisateur(null), []);
+  const mettreAJourUtilisateur = useCallback(
+    (modifications) => setUtilisateur((actuel) => ({ ...actuel, ...modifications })),
+    []
+  );
 
   // [AJOUT HOOK] useMemo : l'objet du contexte n'est recréé que si
   // utilisateur ou deconnecter change -> évite de redessiner pour rien
   // tous les écrans qui lisent le contexte.
   const valeurContexte = useMemo(
-    () => ({ utilisateur, deconnecter }),
-    [utilisateur, deconnecter]
+    () => ({ utilisateur, deconnecter, mettreAJourUtilisateur }),
+    [utilisateur, deconnecter, mettreAJourUtilisateur]
   );
   // Attention : les hooks doivent TOUJOURS être appelés avant les "if/return".
 

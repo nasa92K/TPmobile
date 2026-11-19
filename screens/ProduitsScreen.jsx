@@ -8,12 +8,12 @@
 // =====================================================================
 import { useState, useEffect, useRef } from 'react';
 import {
-  View, Text, TextInput, FlatList, Pressable, ActivityIndicator,
+  View, Text, TextInput, FlatList, Pressable, ActivityIndicator, Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './ProduitsStyles';
 import {
-  initDb, listerProduits, compterProduits, listerCategories, insererProduit,
+  initDb, listerProduits, compterProduits, listerCategories,
 } from '../database';
 
 // Nombre de produits lus à chaque page
@@ -25,6 +25,12 @@ const formaterPrix = (prix) => prix.toFixed(2).replace('.', ',') + ' €';
 // Composant d'une ligne de la liste (défini HORS de l'écran)
 const CarteProduit = ({ produit }) => (
   <View style={styles.carte}>
+    <Image
+      source={{ uri: produit.image_url }}
+      style={styles.imageJeu}
+      resizeMode="cover"
+      accessibilityLabel={`Image de ${produit.nom}`}
+    />
     <View style={styles.carteGauche}>
       <Text style={styles.nom}>{produit.nom}</Text>
       <Text style={styles.categorie}>{produit.categorie}</Text>
@@ -32,8 +38,8 @@ const CarteProduit = ({ produit }) => (
     <View>
       <Text style={styles.prix}>{formaterPrix(produit.prix)}</Text>
       {/* Style conditionnel : rouge seulement si stock === 0 */}
-      <Text style={[styles.stock, produit.stock === 0 && styles.rupture]}>
-        {produit.stock === 0 ? 'En rupture' : `Stock : ${produit.stock}`}
+      <Text style={styles.stock}>
+        Sorti en {produit.annee}
       </Text>
     </View>
   </View>
@@ -118,17 +124,6 @@ export const ProduitsScreen = ({ utilisateur, onDeconnexion }) => {
     recharger();
   };
 
-  const ajouter = async () => {
-    try {
-      // On écrit dans la base, PUIS on relit
-      await insererProduit(`Nouveau produit ${Date.now() % 1000}`, 'Maison', 9.9, 5);
-      recharger();
-    } catch (e) {
-      console.log(e);
-      setErreur("Impossible d'ajouter le produit");
-    }
-  };
-
   // Appelée par onEndReached quand on approche de la fin de la liste
   const chargerPlus = async () => {
     // Garde-fous : lecture déjà en cours, ou tout est déjà chargé
@@ -183,8 +178,8 @@ export const ProduitsScreen = ({ utilisateur, onDeconnexion }) => {
       <View style={styles.fixe}>
         <View style={styles.ligneTitre}>
           <View>
-            <Text style={styles.titre}>Produits</Text>
-            <Text style={styles.sousTitre}>{produits.length} / {total} produit(s)</Text>
+            <Text style={styles.titre}>Jeux vidéo</Text>
+            <Text style={styles.sousTitre}>{produits.length} / {total} jeu(x)</Text>
           </View>
           <Pressable onPress={onDeconnexion}>
             <Text style={styles.lienDeconnexion}>Se déconnecter</Text>
@@ -193,7 +188,7 @@ export const ProduitsScreen = ({ utilisateur, onDeconnexion }) => {
         <Text style={styles.bonjour}>Connecté : {utilisateur.prenom} {utilisateur.nom}</Text>
         <TextInput
           style={styles.champRecherche}
-          placeholder="Rechercher un produit"
+          placeholder="Rechercher un jeu"
           placeholderTextColor="#9CA3AF"
           autoCorrect={false}
           value={recherche}
@@ -229,18 +224,6 @@ export const ProduitsScreen = ({ utilisateur, onDeconnexion }) => {
         keyExtractor={(item) => String(item.id)} // clé unique et stable : l'id SQL
         renderItem={({ item }) => <CarteProduit produit={item} />}
         ItemSeparatorComponent={Separateur}
-        ListHeaderComponent={
-          <View style={styles.entete}>
-            <Pressable
-              onPress={ajouter}
-              style={({ pressed }) => [
-                styles.bouton, styles.boutonAjout, pressed && styles.boutonPresse,
-              ]}
-            >
-              <Text style={styles.boutonTexte}>+ Ajouter un produit</Text>
-            </Pressable>
-          </View>
-        }
         ListEmptyComponent={
           <Text style={styles.vide}>
             {filtreActif ? 'Aucun produit ne correspond' : 'Aucun produit à afficher'}

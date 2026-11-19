@@ -8,6 +8,8 @@ export {
   insererUtilisateur,
   listerUtilisateurs,
   verifierConnexion,
+  modifierEmail,
+  changerMotDePasse,
 } from './utilisateurs';
 export {
   listerProduits, compterProduits, listerCategories, insererProduit,
